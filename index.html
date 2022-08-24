@@ -1,0 +1,788 @@
+<html>
+
+<head>
+    <title>Ma liste de souhaits - ZOUTO ASSISTANT</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+    <style>
+        body {
+            font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+            font-size: 100%;
+            min-width: 400px;
+        }
+        
+        a {
+            outline: none;
+        }
+        
+        .form-control {
+            margin-bottom: 15px;
+        }
+        
+        .img-responsive {
+            margin: 0 auto;
+        }
+        
+        .loader {
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: 0;
+            transform: translate(-50%, -50%);
+            z-index: 99;
+        }
+        
+        .main_container {
+            position: relative;
+        }
+        
+        .processing:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            background: #5656567a;
+        }
+        
+        .submit_button {
+            text-align: right;
+        }
+        
+        .add_to_wishlist {
+            display: none;
+        }
+        
+        .signInMainTitle {
+            background: #05a698;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .signInMainTitle h3 {
+            color: #fff;
+            margin: 0;
+            font-size: 20px;
+            text-transform: uppercase;
+        }
+        
+        .signInMainData {
+            padding: 20px;
+            background: #eee;
+            text-align: center;
+        }
+        
+        .signInMainData .form-group {
+            text-align: left;
+        }
+        
+        .signInMainData .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333333;
+            text-transform: uppercase;
+        }
+        
+        .signInMainData .form-group input#email {
+            height: 50px;
+            border-radius: 0;
+        }
+        
+        .signInMainData .submit_button button#submit_signup,
+        .submit_button button#submit {
+            background: #333;
+            border-color: #333;
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            padding: 6px 20px;
+            border-radius: 0;
+            box-shadow: 4px 4px 0 0 #e58a97;
+        }
+        
+        .signInMainData .submit_button button#submit_signup:hover,
+        .submit_button button#submit:hover {
+            background: #3b4054;
+        }
+        
+        .clear_list button.btn.btn-default.btn-primary.removeSelectedData,
+        button.btn.btn-default.btn-primary.removeData {
+            width: 150px;
+            padding: 5px 0 10px 0;
+            line-height: 19px;
+        }
+        
+        .smdSigninInner,
+        .smdCurrentProcuts,
+        .smdTopTrending {
+            background: #fff;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        
+        .smdOptions {
+            display: flex;
+            justify-content: space-evenly;
+        }
+        
+        .smdOptionsBox .obIcon {
+            background: #a6e6cc;
+            color: #1d2221;
+            width: 40px;
+            height: 40px;
+            border-radius: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+        }
+        
+        .smdOptionsBox.dark .obIcon {
+            background: #1d2221;
+            color: #fff;
+        }
+        
+        .obTitle {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1px;
+            margin-top: 3px;
+        }
+        
+        .smdSigninInner {
+            padding: 15px;
+        }
+        
+        .smdSigninInner h3 {
+            font-size: 14px;
+        }
+        
+        .innerSigninButton a {
+            background: #f0c14b;
+            border-color: #a88734 #9c7e31 #846a29;
+            border-width: 1px;
+            border-style: solid;
+            padding: 6px 40px;
+            display: inline-block;
+            color: #111111;
+            font-weight: 500;
+            font-size: 14px;
+            border-radius: 5px;
+            text-decoration: none !important;
+        }
+        
+        .innerSigninButton a:hover {
+            background: #dfb13d;
+            color: #111111;
+        }
+        
+        .smdcpInner {
+            display: flex;
+            padding: 15px;
+        }
+        
+        .smdcpImage img {
+            width: 100%;
+            background-color: rgb(167 169 172) !important;
+        }
+        
+        .smdcpImage {
+            width: 100px;
+        }
+        
+        .smdcpData {
+            width: calc(100% - 100px);
+            padding-left: 15px;
+        }
+        
+        .smdcpData .product_title {
+            font-size: 13px;
+            font-weight: 500;
+            text-align: left;
+            margin-bottom: 5px;
+            color: #0066c0;
+        }
+        
+        .smdcpData .product_price {
+            text-align: left;
+            font-size: 16px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        
+        .smdcpData .product_weight {
+            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            color: #777;
+        }
+        
+        .smdcpData .product_depth {
+            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            color: #777;
+        }
+        
+        .smdcpData .product_height {
+            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            color: #777;
+        }
+        
+        .smdcpData .product_width {
+            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            color: #777;
+        }
+        
+        .smdcpData .product_daimention {
+            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            color: #777;
+        }
+        
+        .smdOptionsBox a {
+            color: #1d2221;
+            text-decoration: none !important;
+        }
+        
+        .smdOptionsBox a:hover {}
+        
+        .smdTopTrending {
+            overflow: hidden;
+        }
+        
+        .smdTopTrending .table thead th {
+            vertical-align: bottom;
+            border: none;
+            background: #3b4054;
+            color: #fff;
+            font-weight: 400;
+            font-size: 14px;
+        }
+        
+        .smdTopTrending .table td {
+            border: none;
+            font-size: 14px;
+        }
+        
+        .smdTopTrending .table td:last-child {
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        
+        .signInInfoText {
+            font-size: 13px;
+            font-weight: 500;
+            color: #404040;
+            margin-bottom: 20px;
+        }
+        
+        .submit_button.signInButton {
+            text-align: center;
+        }
+        
+        .smdOptionsBox.dark .obIcon.flight {
+            color: #fff;
+            border: 1px solid black;
+            background: #fff;
+            width: 75px;
+            height: 75px;
+        }
+        
+        .smdTopTrending,
+        .clear_list {
+            display: none;
+        }
+        
+        span.error {
+            color: red;
+        }
+        
+        .smdcpData p.qty {
+            display: flex;
+            white-space: nowrap;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            color: #777;
+        }
+        
+        p.product_comment textarea {
+            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            color: #777;
+            padding: 7px;
+        }
+        
+        .smdcpData p.qty input#product_qty {
+            width: 70px;
+            margin-left: 15px;
+        }
+        
+        .smdcpInner2 a#submit_add,
+        .nldButton,
+        .automatically_btn,
+        .manually_cls>button {
+            color: #fff;
+            text-decoration: none !important;
+            background: #3b4054;
+            padding: 10px 22px;
+            text-transform: uppercase;
+            font-weight: 500;
+            box-shadow: 4px 4px 0 0 #e58a97 !important;
+            display: inline-block;
+            margin-top: 10px;
+            border-radius: 0 !important;
+        }
+        
+        .automatically_btn:hover {
+            color: #fff !important;
+        }
+        
+        .automatically_btn,
+        .manually_cls button {
+            max-width: 175px;
+            font-size: 14px;
+        }
+        
+        .both_btn {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .nldButton:hover {
+            color: #fff;
+        }
+        
+        .signInMainTitle {
+            background: #e58b97;
+        }
+        
+        .signInMainTitle h3 {
+            font-size: 30px;
+        }
+        
+        .smdcpInner2 {
+            padding: 15px;
+        }
+        
+        .smdcpInner2 span {
+            font-size: 13px;
+            color: #686b92;
+        }
+        
+        .grayGradient {
+            background: rgb(126, 130, 131);
+            background: linear-gradient(135deg, rgba(126, 130, 131, 1) 0%, rgba(180, 179, 175, 1) 100%);
+        }
+        
+        .newLayoutData {
+            text-align: left;
+        }
+        
+        .nldText1 {
+            color: #2c3049;
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .girlPhoto {
+            background-image: url(girl1.jpg);
+            background-color: #b4b3af;
+            background-attachment: scroll;
+            background-size: cover;
+            background-position: 23%;
+            background-repeat: no-repeat;
+        }
+        
+        .nldText2 {
+            color: #4a4a4a;
+            font-size: 13px;
+            max-width: 60%;
+            font-weight: 500;
+        }
+        
+        .nldText2 span {
+            margin-top: 10px !important;
+            display: inline-block;
+        }
+        
+        .nldText3 {
+            color: #fff;
+            font-size: 15px;
+            max-width: 60%;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .nldText3 a {
+            color: #3b4054;
+            text-decoration: underline;
+            font-weight: 700;
+        }
+        
+        .add_to_wishlist .signInMainData {
+            min-height: 508px;
+        }
+        
+        img.smdOptionsBoxImage {
+            width: 200px;
+        }
+        
+        button.removeSelectedData {
+            background: #3b4054;
+            border-color: rgba(0, 0, 0, .2);
+        }
+        
+        button.removeSelectedData:hover {
+            background: #20232f;
+            border-color: rgba(0, 0, 0, .4);
+        }
+        
+        button.removeData {
+            background: #f1f1f1;
+            color: #333;
+            border-color: rgba(0, 0, 0, .2);
+        }
+        
+        button.removeData:hover {
+            background: #f1f1f1;
+            color: #333;
+            border-color: rgba(0, 0, 0, .4);
+        }
+        
+        .prodAjouterZouto .modal-header button.close {
+            margin-left: 0;
+            padding: 20px 0 0 0;
+        }
+        
+        .prodAjouterZouto .modal-header h4.modal-title {
+            text-align: center !important;
+            margin: 0 auto;
+        }
+        
+        .prodAjouterZouto .form-group label {
+            color: #4a4a4a;
+            font-size: 13px;
+            max-width: 60%;
+            font-weight: 500;
+        }
+        
+        .prodAjouterZouto .modal-footer button {
+            background: #3b4054;
+            color: #fff;
+        }
+        
+        .prodAjouterZouto .modal-footer button:hover {
+            background: #000;
+        }
+        
+        .clear_list {
+            margin-top: 35px;
+        }
+        
+        .btn-primary:hover {
+            color: #fff !important;
+            background-color: #3b4054 !important;
+            border-color: #3b4054 !important;
+        }
+        
+        .btn-primary {
+            color: #fff !important;
+            background-color: #3b4054 !important;
+            border-color: #3b4054 !important;
+        }
+    </style>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="js/index.js"></script>
+    <!--
+  - JavaScript and HTML must be in separate files: see our Content Security
+  - Policy documentation[1] for details and explanation.
+  -
+  - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+ -->
+</head>
+
+<body>
+    <div class="main_container signup">
+        <p class="loader" style="display:none;"><img src="loading.gif" class="img-responsive center-block" style="width:100px;" /></p>
+        <div class="signInMainTitle">
+            <h3>Ma liste de souhaits - ZOUTO ASSISTANT</h3>
+        </div>
+        <div class="signInMainData">
+            <p class="message_signup"></p>
+            <p class="signInInfoText">
+                Veuillez vous inscrire à l'extension en utilisant votre identifiant de messagerie.
+            </p>
+            <div class="form-group">
+                <span class="browser_id" style="display:none;"></span>
+                <label for="email">ADRESSE E-MAIL:</label>
+                <input type="email" class="form-control" id="email" placeholder="Entrer votre Email" />
+            </div>
+            <div class="submit_button">
+                <button class="btn btn-default btn-primary" id="submit_signup">SE CONNECTER</button>
+            </div>
+        </div>
+    </div>
+    <div class="main_container othersites" style="display:none;">
+        <p class="loader" style="display:none;"><img src="loading.gif" class="img-responsive center-block" style="width:100px;" /></p>
+        <div class="signInMainTitle">
+            <h3>Ma liste de souhaits - ZOUTO ASSISTANT</h3>
+        </div>
+        <div class="signInMainData girlPhoto">
+            <div class="newLayoutData">
+                <div class="nldText1">DĒSOLĒ :(</div>
+                <div class="nldText2">
+                    <span>Aucun produit ne peut être ajouté depuis la page que vous consultez actuellement.</span>
+                </div>
+                <div class="nldText3">Ajoutez manuellement votre produit sur <a href="#">zouto.co.il</a> puis calculez vos frais d'expéditions en all inclusive.</div>
+                <div class="nldText4">
+                    <a class="nldButton" href="#" type="button" class="btn btn-default btn-primary" data-toggle="modal" data-target="#myModal" id="modalIDD">
+                        AJOUTER À MES PRODUITS 
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main_container homepage" style="display:none;">
+        <p class="loader" style="display:none;"><img src="loading.gif" class="img-responsive center-block" style="width:100px;" /></p>
+        <div class="signInMainTitle">
+            <h3>Ma liste de souhaits - ZOUTO ASSISTANT</h3>
+        </div>
+        <div class="signInMainData">
+            <p class="signInInfoText">
+                Veuillez aller à la page du produit.
+            </p>
+        </div>
+    </div>
+    <div class="main_container add_to_wishlist">
+        <p class="loader" style="display:none;"><img src="loading.gif" class="img-responsive center-block" style="width:100px;" /></p>
+        <!-- Setting the header -->
+        <div class="signInMainTitle">
+            <h3>Ma liste de souhaits - ZOUTO ASSISTANT</h3>
+        </div>
+        <div class="signInMainData">
+            <div class="smdOptions">
+                <div class="smdOptionsBox dark">
+                    <a href="https://zouto.myshopify.com/pages/brought-products" target="_blank">
+                        <img class="smdOptionsBoxImage" src="Zouto-Colisrael-23.png" />
+                        <!--div class="obIcon flight">
+                            <img src="https://qtx.in/zouto/logos/flight.png">
+                        </div>
+                        <div class="obTitle">
+                            Link to Shopify in My Account for calculate shipping
+                        </div-->
+                    </a>
+                </div>
+            </div>
+            <p class="message"></p>
+            <span class="test_message"><h5>Comment voulez-vous ajouter des produits à Zouto ?</h5></span>
+            <div class="both_btn">
+                <div class="automatically_cls">
+                    <a class="automatically_btn" href="#" id="automatically">Automatiquement</a>
+                </div>
+
+                <div class="manually_cls">
+                    <button type="button" class="btn btn-default btn-primary" data-toggle="modal" data-target="#myModal" id="modalID">Manuellement</button>
+                </div>
+            </div>
+
+            <div class="smdCurrentProcuts">
+                <div class="smdcpInner">
+                    <div class="smdcpImage">
+                        <img class="product_image" src="https://images-na.ssl-images-amazon.com/images/I/61YQOZbBtZL._AC_SL1200_.jpg" />
+                        <img class="logo" src="https://qtx.in/zouto/logos/sample_logo.jpg">
+                    </div>
+                    <div class="smdcpData">
+                        <p class="product_price"></p>
+                        <p class="product_title"></p>
+                        <p class="product_weight"></p>
+
+                        <p class="product_depth"></p>
+                        <p class="product_height"></p>
+                        <p class="product_width"></p>
+                        <p class="product_daimention"></p>
+                        <p class="qty">
+                            Quantité : <input type="number" name="product_qty" min="1" step="1" id="product_qty" value="1">
+                        </p>
+                        <p class="product_comment" style="text-align:left;"><textarea id="comment_box" placeholder="Couleur, taille... précisez...." style="width:100%;"></textarea></p>
+                    </div>
+                </div>
+                <div class="smdcpInner2">
+                    <span>Ajouter au panier puis se rendre sur <a href="#">zouto.co.il</a> pour le calcul des frais de ports.</span>
+                    <div class="smdOptionsBox dark">
+                        <a class="mdOptionsBox" href="#" id="submit_add">
+                            AJOUTER À MES PRODUITS
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="smdTopTrending">
+                <div class="added_data"></div>
+            </div>
+
+            <div class="clear_list" style="display:none;text-align:center;">
+                <button class="btn btn-default btn-primary removeSelectedData">Supprimer</button>
+                <button class="btn btn-default btn-primary removeData">Tout supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="myModal" class="prodAjouterZouto modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Ajouter un produit manuellement</h4>
+                </div>
+                <p class="message_modal"></p>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="form-group">
+                            <label for="product_title">URL du produit:</label>
+                            <input type="product_title" class="form-control" id="product_url" name="product_url" required="">
+                            <span id="urlError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="product_title">Titre du produit:</label>
+                            <input type="product_title" class="form-control" id="product_title" name="product_title" required="">
+                            <span id="nameError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="product_price">Prix du produit:</label>
+                            <input type="num" class="form-control" id="product_price" name="product_price" required="">
+                            <span id="priceError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="product_price">Quantité:</label>
+                            <input type="num" class="form-control" id="product_qty" name="product_qty" min="1" step="1" value="1">
+                            <span id="priceError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="product_weight">Poids du produit:</label>
+                            <input type="text" class="form-control" id="product_weight" name="product_weight" required="" placeholder="Kg">
+                            <span id="weightError"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product_depth">Profondeur du produit:</label>
+                            <input type="text" class="form-control" id="product_depth" name="product_depth" required="" placeholder="Kg">
+                            <span id="depthError"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product_height">Hauteur du produit:</label>
+                            <input type="text" class="form-control" id="product_height" name="product_height" required="" placeholder="Kg">
+                            <span id="heightError"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product_width">Largeur du produit:</label>
+                            <input type="text" class="form-control" id="product_width" name="product_width" required="" placeholder="Kg">
+                            <span id="widthError"></span>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="comment">Commenter:</label>
+                            <textarea class="form-control" rows="5" id="comment" name="pro_comment" placeholder="Couleur, taille... précisez...."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-default" id="submit_zouto">Soumettre</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- 2nd Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Ajouter un produit manuellement</h4>
+                </div>
+                <p class="message_modal"></p>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="form-group">
+                            <label for="product_title">URL du produit:</label>
+                            <input type="product_title" class="form-control" id="product_url" name="product_url" required="">
+                            <span id="urlError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="product_title">Titre du produit:</label>
+                            <input type="product_title" class="form-control" id="product_title" name="product_title" required="">
+                            <span id="nameError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="product_price">Prix du produit:</label>
+                            <input type="num" class="form-control" id="product_price" name="product_price" required="">
+                            <span id="priceError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="product_price">Quantité:</label>
+                            <input type="num" class="form-control" id="product_qty" name="product_qty" min="1" step="1" value="1">
+                            <span id="priceError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="product_weight">Poids du produit:</label>
+                            <input type="text" class="form-control" id="product_weight" name="product_weight" required="" placeholder="Kg">
+                            <span id="weightError"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product_depth">Profondeur du produit:</label>
+                            <input type="text" class="form-control" id="product_depth" name="product_depth" required="" placeholder="Kg">
+                            <span id="depthError"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product_height">Hauteur du produit:</label>
+                            <input type="text" class="form-control" id="product_height" name="product_height" required="" placeholder="Kg">
+                            <span id="heightError"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="product_width">Largeur du produit:</label>
+                            <input type="text" class="form-control" id="product_width" name="product_width" required="" placeholder="Kg">
+                            <span id="widthError"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="comment">Commenter:</label>
+                            <textarea class="form-control" rows="5" id="comment" name="pro_comment" placeholder="Couleur, taille... précisez...."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-default" id="submit_zouto">Soumettre</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
